@@ -1,5 +1,6 @@
 /*-
  * Copyright (C) 2008 Erik Larsson
+ * Copyright (C) 2013 SATO Kentaro
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,6 +18,7 @@
 
 package org.catacombae.jparted.lib.fs.hfs;
 
+import java.util.Locale;
 import org.catacombae.jparted.lib.DataLocator;
 import org.catacombae.jparted.lib.fs.DefaultFileSystemHandlerInfo;
 import org.catacombae.jparted.lib.fs.FileSystemHandler;
@@ -36,17 +38,28 @@ public class HFSFileSystemHandlerFactory extends FileSystemHandlerFactory {
             0, "Erik Larsson, Catacombae Software");
 
 
-    private static final CustomAttribute stringEncodingAttribute =
-            createCustomAttribute(AttributeType.STRING, "HFS_STRING_ENCODING",
-            "The string encoding for filenames in the current HFS file system",
-            "MacRoman");
+    private static CustomAttribute stringEncodingAttribute;
 
+
+    private CustomAttribute getEncodingAttribute() {
+        if (stringEncodingAttribute == null) {
+            String encoding = "MacRoman";
+            if (Locale.getDefault().getLanguage().equals("ja")) {
+                encoding = "Shift_JIS"; // no MacJapanese in Java
+            }
+            stringEncodingAttribute =
+                createCustomAttribute(AttributeType.STRING, "HFS_STRING_ENCODING",
+                "The string encoding for filenames in the current HFS file system",
+                encoding);
+        }
+        return stringEncodingAttribute;
+    }
 
     public FileSystemHandler createHandler(DataLocator data) {
         boolean useCaching =
                 createAttributes.getBooleanAttribute(StandardAttribute.CACHING_ENABLED);
         String encoding =
-                createAttributes.getStringAttribute(stringEncodingAttribute);
+                createAttributes.getStringAttribute(getEncodingAttribute());
 
         return createHandlerInternal(data, useCaching, encoding);
     }
@@ -69,7 +82,7 @@ public class HFSFileSystemHandlerFactory extends FileSystemHandlerFactory {
 
     public CustomAttribute[] getSupportedCustomAttributes() {
         return new CustomAttribute[] {
-            stringEncodingAttribute
+            getEncodingAttribute()
         };
     }
 
