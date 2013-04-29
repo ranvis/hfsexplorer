@@ -135,6 +135,8 @@ public class FileSystemBrowserWindow extends JFrame {
     /** The backing data locator for the fsHandler. Useful when extracting raw data. */
     private DataLocator fsDataLocator;
 
+    private static final int PROGRESS_UPDATE_INTERVAL_MS = 250;
+
     public FileSystemBrowserWindow() {
         this(null);
     }
@@ -923,7 +925,7 @@ public class FileSystemBrowserWindow extends JFrame {
         //System.out.println("extractForkToStream working with a " + forkFilter.getClass());
         final long originalLength = theFork.getLength();
         long bytesToRead = originalLength;
-        byte[] buffer = new byte[4096];
+        byte[] buffer = new byte[64 * 1024];
         while(bytesToRead > 0) {
             if(pm.cancelSignaled()) {
                 break;
@@ -1178,7 +1180,7 @@ public class FileSystemBrowserWindow extends JFrame {
                                 // Update user progress (not too often)
                                 long currentTimestamp = System.currentTimeMillis();
                                 long millisSinceLastUpdate = currentTimestamp - lastUpdateTimestamp;
-                                if(millisSinceLastUpdate >= 40) {
+                                if(millisSinceLastUpdate >= PROGRESS_UPDATE_INTERVAL_MS) {
                                     pm.setProgress((int) ((bytesExtracted / (double) bytesToExtract) * Integer.MAX_VALUE));
                                     pm.setNote("Extracted " + SpeedUnitUtils.bytesToBinaryUnit(bytesExtracted, df) +
                                             " / " + bytesToExtractString + " ...");
