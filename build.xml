@@ -8,7 +8,7 @@
   <property name="java.source.dir" value="src"/>
   <property name="manifest.source.dir" value="src.META-INF"/>
   <!--<property name="builddir" value=".build~"/>-->
-  <property name="builddir" value=".antbuild~"/>
+  <property name="builddir" value=".build.java~"/>
   <property name="java.build.library.dir" value="lib"/>
   <property name="java.runtime.library.dir" value="dist/lib"/>
   <!--<property name="manifest.filename" value="${manifest.source.dir}/MANIFEST.MF"/>-->

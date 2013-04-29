@@ -25,7 +25,7 @@ goto end
 :build_gcc
 echo Compiling with gcc...
 set TARGET_DLL=%TARGET_PREFIX%_%I386_ARCHID%.dll
-gcc -Wall -D_JNI_IMPLEMENTATION_ -Wl,--kill-at -shared %SOURCE_FILES% -o "%TARGET_DLL%"
+gcc -Wall -D_JNI_IMPLEMENTATION_ -Wl,--kill-at -shared %SOURCE_FILES% -o "%TARGET_DLL%" -I "%JDK_PATH%\include" -I "%JDK_PATH%\include\win32"
 if not "%ERRORLEVEL%"=="0" goto error
 goto completed
 

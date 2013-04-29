@@ -1,0 +1,1 @@
+convert resource/finderdrive_folderback_*.png resource/finderdrive_folderback.ico

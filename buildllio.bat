@@ -36,14 +36,14 @@ goto error
 :gcc_compile
 
 echo Compiling with GCC...
-call "%~dp0\buildllio_compile.bat" gcc "%ARCHITECTURE%"
+call "%~dp0\buildllio_compile.bat" gcc %ARCHITECTURE%
 if not "%ERRORLEVEL%"=="0" goto error
 goto completed
 
 :vc_compile
 
 echo Compiling with Visual C++...
-call "%~dp0\buildllio_compile.bat" vc "%ARCHITECTURE%"
+call "%~dp0\buildllio_compile.bat" vc %ARCHITECTURE%
 if not "%ERRORLEVEL%"=="0" goto error
 goto completed
 

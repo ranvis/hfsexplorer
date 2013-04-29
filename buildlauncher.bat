@@ -32,7 +32,7 @@ popd
 if not "%WINDRES_RES%"=="0" goto error
 
 echo Compiling launcher.cpp...
-g++ -g -Wall -D_JNI_IMPLEMENTATION_ -c "%LAUNCHER_SRC%\launcher.cpp" -o "%BUILD_DIR%\launcher.o"
+g++ -g -Wall -D_JNI_IMPLEMENTATION_ -c "%LAUNCHER_SRC%\launcher.cpp" -o "%BUILD_DIR%\launcher.o" -I "%JDK_PATH%\include" -I "%JDK_PATH%\include\win32"
 if not "%ERRORLEVEL%"=="0" goto error
 
 echo Building %BUILDTYPE% app...
