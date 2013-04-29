@@ -1,5 +1,6 @@
 /*-
  * Copyright (C) 2006-2008 Erik Larsson
+ * Copyright (C) 2013 SATO Kentaro
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -105,7 +106,7 @@ import org.catacombae.udif.UDIFRandomAccessStream;
  * @author Erik
  */
 public class FileSystemBrowserWindow extends JFrame {
-    private static final String TITLE_STRING = "HFSExplorer " + HFSExplorer.VERSION;
+    private static final String TITLE_STRING = HFSExplorer.NAME + " " + HFSExplorer.VERSION;
     private static final ImageIcon[] WINDOW_ICONS = {
         new ImageIcon(ClassLoader.getSystemResource("res/finderdrive_folderback_16.png")),
         new ImageIcon(ClassLoader.getSystemResource("res/finderdrive_folderback_32.png")),
@@ -470,7 +471,7 @@ public class FileSystemBrowserWindow extends JFrame {
                 File f = new File("doc/html/index.html");
                 if(f.exists()) {
                     try {
-                        HelpBrowserPanel.showHelpBrowserWindow("HFSExplorer help browser", f.toURI().toURL());
+                        HelpBrowserPanel.showHelpBrowserWindow(HFSExplorer.NAME + " help browser", f.toURI().toURL());
                     } catch(MalformedURLException ex) {
                         ex.printStackTrace();
                         Logger.getLogger(FileSystemBrowserWindow.class.getName()).log(Level.WARNING, null, ex);
@@ -480,6 +481,7 @@ public class FileSystemBrowserWindow extends JFrame {
         });
 
         JMenuItem checkUpdatesItem = new JMenuItem("Check for updates...");
+        checkUpdatesItem.setEnabled(false);
         checkUpdatesItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -987,7 +989,7 @@ public class FileSystemBrowserWindow extends JFrame {
         ActionListener alOpen = null;
         if(System.getProperty("os.name").toLowerCase().startsWith("windows")) {
             //System.err.println("Windows detected");
-            final String finalCommand = "cmd.exe /c start \"HFSExplorer invoker\" \"" + rec.getName() + "\"";
+            final String finalCommand = "cmd.exe /c start \"" + HFSExplorer.NAME + " invoker\" \"" + rec.getName() + "\"";
             alOpen = new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent ae) {
@@ -1523,8 +1525,9 @@ public class FileSystemBrowserWindow extends JFrame {
     
     private void actionShowAboutDialog() {
         String message = "";
-        message += "HFSExplorer " + HFSExplorer.VERSION + " Build #" + BuildNumber.BUILD_NUMBER + "\n";
+        message += HFSExplorer.NAME + " " + HFSExplorer.VERSION + " Build #" + BuildNumber.BUILD_NUMBER + "\n";
         message += HFSExplorer.COPYRIGHT + "\n";
+        message += HFSExplorer.COPYRIGHT2 + "\n";
         for(String notice : HFSExplorer.NOTICES) {
             message += notice + "\n";
         }

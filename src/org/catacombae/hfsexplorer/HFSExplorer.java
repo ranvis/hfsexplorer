@@ -1,5 +1,6 @@
 /*-
  * Copyright (C) 2006-2007 Erik Larsson
+ * Copyright (C) 2013 SATO Kentaro
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -47,8 +48,10 @@ import org.catacombae.hfsexplorer.partitioning.APMPartition;
 
 @SuppressWarnings("deprecation") // TODO: Fix HFSExplorer so it doesn't use deprecated methods...
 public class HFSExplorer {
+    public static final String NAME = "HFSExplorerU";
     public static final String VERSION = "0.21";
     public static final String COPYRIGHT = "Copyright \u00A9 Erik Larsson 2006-2008";
+    public static final String COPYRIGHT2 = "Copyright \u00A9 2013 SATO Kentaro";
     public static final String[] NOTICES =
     {
         "This program is distributed under the GNU General Public License version 3.",
@@ -768,8 +771,9 @@ public class HFSExplorer {
     public static void printUsageInfo() {
 	// For measurement of the de facto standard terminal width in fixed width environments:
 	// 79:  <------------------------------------------------------------------------------->
-	println("HFSExplorer v" + VERSION + " Build #" + BuildNumber.BUILD_NUMBER);
+	println(NAME + " v" + VERSION + " Build #" + BuildNumber.BUILD_NUMBER);
 	println(COPYRIGHT);
+	println(COPYRIGHT2);
 	println("  displays information about an HFS filesystem.");
 	println("  usage: java HFSExplorer [common options] <verb> [verb options] <file/device>");
 	println();

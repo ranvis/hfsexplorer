@@ -134,6 +134,8 @@
 /* Function prototype for entry to dynamically loaded JVM library. */
 typedef jint (JNICALL JNI_CreateJavaVM_t)(JavaVM ** pJvm, JNIEnv ** pEnv, void * vmArgs);
 
+#define APP_NAME "HFSExplorerU"
+
 /*
  * CUSTOMIZE:
  *   Here you can set the hard coded package path to the start class.
@@ -641,7 +643,7 @@ static bool startJavaVM(JavaVM *jvmInstance, const int javaArgsLength, const _TC
   if(env->ExceptionOccurred()) {
     env->ExceptionDescribe();
     LOG(debug, "    - Exception occurred!");
-    MessageBox(NULL, _T("Could not find the required class files!"), _T("HFSExplorer launch error"), MB_OK | MB_ICONERROR);
+    MessageBox(NULL, _T("Could not find the required class files!"), _T(APP_NAME " launch error"), MB_OK | MB_ICONERROR);
   }
       
   if(cls != NULL) {
@@ -965,7 +967,7 @@ static bool spawnElevatedProcess(_TCHAR *imageFile, _TCHAR *currentWorkingDirect
     LOG(debug, "  ERROR_CANCELLED=%d", ERROR_CANCELLED);
     LOG(debug, "  ERROR_NOT_ENOUGH_MEMORY=%d", ERROR_NOT_ENOUGH_MEMORY);
     LOG(debug, "  ERROR_SHARING_VIOLATION=%d", ERROR_SHARING_VIOLATION);
-    MessageBox(NULL, _T("Error while trying to create elevated process..."), _T("HFSExplorer launch error"), MB_OK);
+    MessageBox(NULL, _T("Error while trying to create elevated process..."), _T(APP_NAME " launch error"), MB_OK);
   }
   
   // Clean up
@@ -987,7 +989,7 @@ int main(int original_argc, char** original_argv) {
   int argc = 0;
   _TCHAR **argv = CommandLineToArgvW(commandLine, &argc);
   if(argv == NULL) {
-    MessageBox(NULL, _T("Could not get argv! FATAL..."), _T("HFSExplorer launch error"), MB_OK);
+    MessageBox(NULL, _T("Could not get argv! FATAL..."), _T(APP_NAME " launch error"), MB_OK);
     return RETVAL_COMMANDLINETOARGVW_FAILED;
   }
 #else
@@ -1008,7 +1010,7 @@ int main(int original_argc, char** original_argv) {
     if(gmfRes == 0) {
       printError(_T("GetModuleFileName failed with error "), GetLastError());
       MessageBox(NULL, _T("Problem (1) with getting the fully qualified path of the executable! FATAL..."), 
-		 _T("HFSExplorer launch error"), MB_OK);
+		 _T(APP_NAME " launch error"), MB_OK);
       return RETVAL_COULD_NOT_GET_EXE_PATH;
     }
     else if(gmfRes == processFilenameLength) {
@@ -1049,7 +1051,7 @@ int main(int original_argc, char** original_argv) {
   if(actualCWDLength+1 != currentWorkingDirectoryLength) {
     LOG(debug, "currentWorkingDirectoryLength=%d, actualCWDLength=%d", currentWorkingDirectoryLength, actualCWDLength);
     printError(_T("GetCurrentDirectory failed with error "), GetLastError());
-    MessageBox(NULL, _T("Could not get the current working directory."), _T("HFSExplorer launch error"), MB_OK);
+    MessageBox(NULL, _T("Could not get the current working directory."), _T(APP_NAME " launch error"), MB_OK);
     returnValue = RETVAL_COULD_NOT_GET_CWD;
   }
   else {
@@ -1063,7 +1065,7 @@ int main(int original_argc, char** original_argv) {
       else {
 	returnValue = RETVAL_INVOKEUAC_FAILED;
 	LOG(error, "Failed to create elevated (UAC) process!");
-	MessageBox(NULL, _T("Failed to create elevated (UAC) process!"), _T("HFSExplorer launch error"), MB_OK);
+	MessageBox(NULL, _T("Failed to create elevated (UAC) process!"), _T(APP_NAME " launch error"), MB_OK);
       }
     }
     else { // No -invokeuac switch supplied
@@ -1205,7 +1207,7 @@ int main(int original_argc, char** original_argv) {
 	returnValue = RETVAL_OK;
       }
       else {
-	MessageBox(NULL, _T("No Java Virtual Machine found! Please get one from http://java.sun.com ..."), _T("HFSExplorer launch error"), MB_OK);
+	MessageBox(NULL, _T("No Java Virtual Machine found! Please get one from http://java.sun.com ..."), _T(APP_NAME " launch error"), MB_OK);
 	returnValue = RETVAL_JVM_NOT_FOUND;
       }
       /* </Try different methods to locate and start a JVM> */
