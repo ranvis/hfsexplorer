@@ -41,7 +41,9 @@ import org.catacombae.jparted.lib.fs.FSForkType;
 import org.catacombae.jparted.lib.fs.FileSystemHandlerFactory;
 import org.catacombae.jparted.lib.fs.FileSystemHandlerFactory.StandardAttribute;
 import org.catacombae.jparted.lib.fs.FileSystemMajorType;
+import org.catacombae.jparted.lib.fs.FSAttributes;
 import org.catacombae.jparted.lib.fs.hfscommon.HFSCommonFileSystemHandler;
+import org.catacombae.jparted.lib.fs.hfscommon.HFSCommonFSFile;
 import org.catacombae.jparted.lib.ReadableStreamDataLocator;
 import java.awt.BorderLayout;
 import java.awt.Toolkit;
@@ -1913,6 +1915,11 @@ public class FileSystemBrowserWindow extends JFrame {
                 else
                     extractForkToStream(theFork, fos, progressDialog);
                 fos.close();
+
+                if(rec instanceof HFSCommonFSFile) {
+                    FSAttributes attrs = ((HFSCommonFSFile)rec).getAttributes();
+                    outFile.setLastModified(attrs.getModifyDate().getTime());
+                }
                 
                 if(curFileName != (Object) originalFileName && !curFileName.equals(originalFileName))
                     errorMessages.addLast("File \"" + originalFileName +
