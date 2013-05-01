@@ -18,7 +18,10 @@
 
 package org.catacombae.jparted.lib.fs.hfs;
 
+import java.io.InputStream;
+import java.io.IOException;
 import java.util.Locale;
+import java.util.Properties;
 import org.catacombae.jparted.lib.DataLocator;
 import org.catacombae.jparted.lib.fs.DefaultFileSystemHandlerInfo;
 import org.catacombae.jparted.lib.fs.FileSystemHandler;
@@ -43,9 +46,32 @@ public class HFSFileSystemHandlerFactory extends FileSystemHandlerFactory {
 
     private CustomAttribute getEncodingAttribute() {
         if (stringEncodingAttribute == null) {
-            String encoding = "MacRoman";
-            if (Locale.getDefault().getLanguage().equals("ja")) {
-                encoding = "Shift_JIS"; // no MacJapanese in Java
+            String encoding = "X-MacRoman";
+            InputStream stream = getClass().getResourceAsStream("encoding.properties");
+            if (stream != null) {
+                try {
+                    Properties props = new Properties();
+                    String value;
+                    try {
+                        props.load(stream);
+                        Locale locale = Locale.getDefault();
+                        String language = locale.getLanguage();
+                        value = props.getProperty(language);
+                        if (value != null && value.equals("*")) {
+                            value = props.getProperty(language + "_" + locale.getCountry());
+                        }
+                        if (value == null) {
+                            value = props.getProperty("default");
+                        }
+                        if (value != null) {
+                            encoding = value;
+                        }
+                    } catch (IOException e) {}
+                } finally {
+                    try {
+                        stream.close();
+                    } catch (IOException e) {}
+                }
             }
             stringEncodingAttribute =
                 createCustomAttribute(AttributeType.STRING, "HFS_STRING_ENCODING",
