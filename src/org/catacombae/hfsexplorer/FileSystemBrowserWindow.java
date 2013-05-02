@@ -63,11 +63,7 @@ import java.io.PrintStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
@@ -126,6 +122,7 @@ public class FileSystemBrowserWindow extends JFrame {
     private FileSystemBrowser<FSEntry> fsb;
     // Fast accessors for the corresponding variables in org.catacombae.hfsexplorer.gui.FilesystemBrowserPanel
     private JCheckBoxMenuItem toggleCachingItem;
+    private JCheckBoxMenuItem replaceReservedCharsItem;
     // For managing all files opened with the "open file" command
     private final LinkedList<File> tempFiles = new LinkedList<File>();
     private final JFileChooser fileChooser = new JFileChooser();
@@ -436,6 +433,10 @@ public class FileSystemBrowserWindow extends JFrame {
                 }
             }
         });
+
+        replaceReservedCharsItem = new JCheckBoxMenuItem("Replace reserved chars");
+        boolean replaceItemDefaultValue = System.getProperty("os.name").startsWith("Windows") && Locale.getDefault().getLanguage().matches("ja|kr|zh");
+        replaceReservedCharsItem.setState(replaceItemDefaultValue);
         
         /*
         JMenuItem setFileReadOffsetItem = new JMenuItem("Set file read offset...");
@@ -588,7 +589,10 @@ public class FileSystemBrowserWindow extends JFrame {
             fileMenu.add(exitProgramItem);
         }
         infoMenu.add(fsInfoItem);
+        infoMenu.addSeparator();
         infoMenu.add(toggleCachingItem);
+        infoMenu.add(replaceReservedCharsItem);
+        infoMenu.addSeparator();
         infoMenu.add(createDiskImageItem);
         //infoMenu.add(setFileReadOffsetItem);
         infoMenu.add(memoryStatisticsItem);
@@ -1834,6 +1838,9 @@ public class FileSystemBrowserWindow extends JFrame {
                 extractProperties.getFileExistsAction();
         
         String fileName = originalFileName;
+        if (replaceReservedCharsItem.getState()) {
+            fileName = Util.replaceNtfsReservedChars(fileName);
+        }
         
         while(fileName != null) {
             String curFileName = fileName;
@@ -2193,6 +2200,9 @@ public class FileSystemBrowserWindow extends JFrame {
 
             final String originalDirName = folder.getName();
             String dirName = originalDirName;
+            if (replaceReservedCharsItem.getState()) {
+                dirName = Util.replaceNtfsReservedChars(dirName);
+            }
             while(dirName != null) {
                 String curDirName = dirName;
                 dirName = null;

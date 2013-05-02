@@ -1,5 +1,6 @@
 /*-
  * Copyright (C) 2006-2008 Erik Larsson
+ * Copyright (C) 2013 SATO Kentaro
  * 
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,6 +18,8 @@
 
 package org.catacombae.hfsexplorer;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class Util extends org.catacombae.util.Util {
     public static <A> boolean contains(A[] array, A element) {
         for(A a : array) {
@@ -24,5 +27,9 @@ public class Util extends org.catacombae.util.Util {
                 return true;
         }
         return false;
+    }
+
+    public static String replaceNtfsReservedChars(String fileName) {
+        return StringUtils.replaceChars(fileName, "*?\"<>:/\\|", "＊？”＜＞：／￥｜");
     }
 }

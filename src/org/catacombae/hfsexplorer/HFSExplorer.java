@@ -65,8 +65,10 @@ public class HFSExplorer {
         "    iHarder Base64 encoder/decoder <http://iharder.sourceforge.net>",
         "        Public domain software.",
         "    Apache Ant bzip2 library <http://ant.apache.org/>",
-        "        Copyright \u00A9 the Apache Software Foundation (ASF). Licensed",
-        "        under the Apache License, Version 2.0.",
+        "        Copyright \u00A9 the Apache Software Foundation (ASF).",
+        "    Apache Commons <http://commons.apache.org/>",
+        "        Copyright \u00A9 2001-2011 The Apache Software Foundation.",
+        "        Licensed under the Apache License, Version 2.0.",
         "        See <http://www.apache.org/licenses/LICENSE-2.0> for the details."
     };
     
