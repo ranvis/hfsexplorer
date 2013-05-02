@@ -36,7 +36,7 @@ public class DXInfo implements StructElements {
      * 0   4     Point   frScroll     Scroll position within the Finder window. The Finder does not necessarily save this position immediately upon user action.                                                                                                                                                
      * -1  4     SInt32  frOpenChain  Chain of directory IDs for open folders. The Finder numbers directory IDs. The Finder does not necessarily save this information immediately upon user action.                                                                                                            
      * 3   1     SInt8   frScript     Extended flags. If the high-bit is set, the script system for displaying the folder's name.                                                                                                                                                                               
-     * 4   1     SInt8   frXFlags     Extended flags. See “Extended Finder Flags .”                                                                                                                                                                                                                             
+     * 4   1     SInt8   frXFlags     Extended flags. See ‚ÄúExtended Finder Flags .‚Äù                                                                                                                                                                                                                             
      * 5   2     SInt16  frComment    Reserved (set to 0). If the high-bit is clear, an ID number for the comment that is displayed in the information window when the user selects a folder and chooses the Get Info command from the File menu. The numbers that identify comments are assigned by the Finder.
      * 7   4     SInt32  frPutAway    If the user moves the folder onto the desktop, the directory ID of the folder from which the user moves it.                                                                                                                                                               
      */
@@ -67,7 +67,7 @@ public class DXInfo implements StructElements {
     public int getFrOpenChain() { return Util.readIntBE(frOpenChain); }
     /** Extended flags. If the high-bit is set, the script system for displaying the folder's name. */
     public byte getFrScript() { return Util.readByteBE(frScript); }
-    /** Extended flags. See “Extended Finder Flags .” */
+    /** Extended flags. See ‚ÄúExtended Finder Flags .‚Äù */
     public byte getFrXFlags() { return Util.readByteBE(frXFlags); }
     /** Reserved (set to 0). If the high-bit is clear, an ID number for the comment that is displayed in the information window when the user selects a folder and chooses the Get Info command from the File menu. The numbers that identify comments are assigned by the Finder. */
     public short getFrComment() { return Util.readShortBE(frComment); }

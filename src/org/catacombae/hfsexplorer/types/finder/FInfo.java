@@ -35,7 +35,7 @@ public class FInfo implements StructElements {
      * -------------------------------------------------------------------------------------------------------------------------------
      * 0   4     OSType  fdType      File type.                                                                                       
      * 4   4     OSType  fdCreator   The signature of the application that created the file.                                          
-     * 8   2     UInt16  fdFlags     Finder flags. See “Finder Flags.”                                                                
+     * 8   2     UInt16  fdFlags     Finder flags. See ‚ÄúFinder Flags.‚Äù                                                                
      * 10  4     Point   fdLocation  The location--specified in coordinates local to the window--of the file's icon within its window.
      * 14  2     SInt16  fdFldr      The window in which the file's icon appears; this information is meaningful only to the Finder.  
      */
@@ -70,7 +70,7 @@ public class FInfo implements StructElements {
         return fdCreator;
     }
 
-    /** Finder flags. See “Finder Flags.” */
+    /** Finder flags. See ‚ÄúFinder Flags.‚Äù */
     public short getFdFlags() {
         return Util.readShortBE(fdFlags);
     }
