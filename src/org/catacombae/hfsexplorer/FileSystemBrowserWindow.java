@@ -192,6 +192,7 @@ public class FileSystemBrowserWindow extends JFrame {
         if(WindowsLowLevelIO.isSystemSupported()) {
             // Only for Windows systems...
             loadFSFromDeviceItem = new JMenuItem("Load file system from device...");
+            loadFSFromDeviceItem.setMnemonic(KeyEvent.VK_D);
             loadFSFromDeviceItem.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent ae) {
@@ -249,6 +250,7 @@ public class FileSystemBrowserWindow extends JFrame {
         */
 
         JMenuItem openUDIFItem = new JMenuItem("Load file system from file...");
+        openUDIFItem.setMnemonic(KeyEvent.VK_F);
         openUDIFItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -297,6 +299,7 @@ public class FileSystemBrowserWindow extends JFrame {
         openUDIFItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, Toolkit.getDefaultToolkit().getMenuShortcutKeyMask()));
 
         JMenuItem loadFromPathItem = new JMenuItem("Load file system from path...");
+        loadFromPathItem.setMnemonic(KeyEvent.VK_P);
         loadFromPathItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -371,6 +374,7 @@ public class FileSystemBrowserWindow extends JFrame {
         JMenuItem exitProgramItem = null;
         if(!System.getProperty("os.name").toLowerCase().startsWith("mac os x")) {
             exitProgramItem = new JMenuItem("Exit");
+            exitProgramItem.setMnemonic(KeyEvent.VK_X);
             exitProgramItem.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent ae) {
@@ -469,6 +473,7 @@ public class FileSystemBrowserWindow extends JFrame {
 
 
         JMenuItem startHelpBrowserItem = new JMenuItem("Help browser");
+        startHelpBrowserItem.setMnemonic(KeyEvent.VK_H);
         startHelpBrowserItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -485,6 +490,7 @@ public class FileSystemBrowserWindow extends JFrame {
         });
 
         JMenuItem checkUpdatesItem = new JMenuItem("Check for updates...");
+        checkUpdatesItem.setMnemonic(KeyEvent.VK_U);
         checkUpdatesItem.setEnabled(false);
         checkUpdatesItem.addActionListener(new ActionListener() {
             @Override
@@ -551,6 +557,7 @@ public class FileSystemBrowserWindow extends JFrame {
         JMenuItem aboutItem = null;
         if(!System.getProperty("os.name").toLowerCase().startsWith("mac os x")) {
             aboutItem = new JMenuItem("About...");
+            aboutItem.setMnemonic(KeyEvent.VK_A);
             aboutItem.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent ae) {
@@ -560,8 +567,11 @@ public class FileSystemBrowserWindow extends JFrame {
         }
 
         JMenu fileMenu = new JMenu("File");
+        fileMenu.setMnemonic(KeyEvent.VK_F);
         JMenu infoMenu = new JMenu("Tools");
+        infoMenu.setMnemonic(KeyEvent.VK_T);
         JMenu helpMenu = new JMenu("Help");
+        helpMenu.setMnemonic(KeyEvent.VK_H);
         if(loadFSFromDeviceItem != null) {
             fileMenu.add(loadFSFromDeviceItem);
         }
@@ -570,9 +580,11 @@ public class FileSystemBrowserWindow extends JFrame {
         fileMenu.add(loadFromPathItem);
         //fileMenu.add(openFromPosItem);
         if(debugConsoleItem != null) {
+            fileMenu.addSeparator();
             fileMenu.add(debugConsoleItem);
         }
         if(exitProgramItem != null) {
+            fileMenu.addSeparator();
             fileMenu.add(exitProgramItem);
         }
         infoMenu.add(fsInfoItem);
