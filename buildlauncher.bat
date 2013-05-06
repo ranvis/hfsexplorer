@@ -19,6 +19,14 @@ set BUILDTYPE=console
 goto build
 
 :build
+
+set COMPILE_OPTIONS=-O3
+set LINK_OPTIONS=-s
+if "%2" == "debug" (
+    set COMPILE_OPTIONS=-g
+    set LINK_OPTIONS=-g
+)
+
 echo Cleaning build dir...
 if exist "%BUILD_DIR%" rmdir /s /q "%BUILD_DIR%"
 if exist "%BUILD_DIR%" echo Could not clean build dir!
@@ -32,11 +40,11 @@ popd
 if not "%WINDRES_RES%"=="0" goto error
 
 echo Compiling launcher.cpp...
-g++ -g -Wall -D_JNI_IMPLEMENTATION_ -c "%LAUNCHER_SRC%\launcher.cpp" -o "%BUILD_DIR%\launcher.o" -I "%JDK_PATH%\include" -I "%JDK_PATH%\include\win32"
+g++ %COMPILE_OPTIONS% -Wall -D_JNI_IMPLEMENTATION_ -c "%LAUNCHER_SRC%\launcher.cpp" -o "%BUILD_DIR%\launcher.o" -I "%JDK_PATH%\include" -I "%JDK_PATH%\include\win32"
 if not "%ERRORLEVEL%"=="0" goto error
 
 echo Building %BUILDTYPE% app...
-g++ -g -m%BUILDTYPE% -Wall -D_JNI_IMPLEMENTATION_ -Wl,--kill-at "%BUILD_DIR%\launcher_res.o" "%BUILD_DIR%\launcher.o" -o "%OUTDIR%\%OUTFILE%"
+g++ %LINK_OPTIONS% -m%BUILDTYPE% -Wall -D_JNI_IMPLEMENTATION_ -Wl,--kill-at "%BUILD_DIR%\launcher_res.o" "%BUILD_DIR%\launcher.o" -o "%OUTDIR%\%OUTFILE%"
 if not "%ERRORLEVEL%"=="0" goto error
 echo Done!
 goto end

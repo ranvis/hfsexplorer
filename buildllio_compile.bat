@@ -17,15 +17,21 @@ if "%1"=="vc" goto build_vc
 goto printusage
 
 :printusage
-echo usage: %0 gcc
+echo usage: %0 gcc [x86^|x64^]
 echo OR
 echo usage: %0 vc [x86^|x64^|ia64]
 goto end
 
 :build_gcc
 echo Compiling with gcc...
-set TARGET_DLL=%TARGET_PREFIX%_%I386_ARCHID%.dll
-gcc -Wall -D_JNI_IMPLEMENTATION_ -Wl,--kill-at -shared %SOURCE_FILES% -o "%TARGET_DLL%" -I "%JDK_PATH%\include" -I "%JDK_PATH%\include\win32"
+if "%2" == "x86" (
+    set TARGET_DLL=%TARGET_PREFIX%_%I386_ARCHID%.dll
+    set GCC_OPTIONS=-m32
+) else (
+    set TARGET_DLL=%TARGET_PREFIX%_%AMD64_ARCHID%.dll
+    set GCC_OPTIONS=-m64
+)
+gcc %GCC_OPTIONS% -s -O3 -Wall -D_JNI_IMPLEMENTATION_ -Wl,--kill-at -shared %SOURCE_FILES% -o "%TARGET_DLL%" -I "%JDK_PATH%\include" -I "%JDK_PATH%\include\win32"
 if not "%ERRORLEVEL%"=="0" goto error
 goto completed
 

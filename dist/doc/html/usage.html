@@ -41,6 +41,19 @@ Partition systems (Apple Partition Map,  GUID Partition Table and Master Boot Re
 <p>Toggle option which enables or disables the caching layer for the file system. If you're running HFSExplorer on a mounted file system (not recommended, but possible), you will want to turn this option off in order to get updated data from the file system structures. When browsing optical media (CD/DVD) this option should be turned on, as it improves performance a lot.</p>
 <h4>1.2.3 Create disk image</h4>
 <p>Allows you to write out the file system as a raw disk image (like a read/write regular .dmg image).</p>
+
+<h4>1.2.4 Replace reserved chars</h4>
+<p>Replaces ASCII reserved characters that cannot be used in the file name on Windows like ‘<code>/</code>’ with Unicode fullwidth characters on extraction.</p>
+
+<h4>1.2.5 Escape control chars</h4>
+<p>Replaces ASCII control characters in the file name with URL encoded string on extraction.</p>
+
+<h4>1.2.6 Append extension</h4>
+<p>If the file doesn’t have an extension in the name, appends one by investigating the file type on extraction.</p>
+
+<h4>1.2.7 Report rename log</h4>
+<p>Reports renames during extraction in the log window.</p>
+
 <h4>1.2.4 Memory statistics</h4>
 <p>Shows a window where you can track HFSExplorer's memory usage.</p>
 <h3>1.3 Help menu</h3>

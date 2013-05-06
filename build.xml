@@ -91,7 +91,7 @@
     <javac srcdir="${java.source.dir}"
 	   destdir="${builddir}"
 	   includes="**"
-	   debug="true"
+	   debug="false"
 	   debuglevel="${debuglevel}"
 	   encoding="UTF-8"
 	   source="${java.source.level}"
