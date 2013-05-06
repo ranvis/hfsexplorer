@@ -5,3 +5,7 @@
 /dist/*.exe
 /dist/lib/hfsx.jar
 /dist/lib/llio_*.dll
+
+# optional files
+/lib/hamcrest-*
+/lib/junit-*

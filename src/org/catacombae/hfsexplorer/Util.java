@@ -19,6 +19,11 @@
 package org.catacombae.hfsexplorer;
 
 import org.apache.commons.lang3.StringUtils;
+import java.io.InputStream;
+import java.io.IOException;
+import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Util extends org.catacombae.util.Util {
     public static <A> boolean contains(A[] array, A element) {
@@ -31,5 +36,37 @@ public class Util extends org.catacombae.util.Util {
 
     public static String replaceNtfsReservedChars(String fileName) {
         return StringUtils.replaceChars(fileName, "*?\"<>:/\\|", "＊？”＜＞：／￥｜");
+    }
+
+    private static Matcher extensionMatcher;
+
+    public static String getFileNameExtension(String fileName) {
+        if (extensionMatcher == null) {
+            extensionMatcher = Pattern.compile("\\.(?:[a-z][0-9a-z]*|[A-Z][0-9A-Z]*)$").matcher("");
+            // limit pattern not to misdetect parts that are not an extension
+        }
+        return extensionMatcher.reset(fileName).find() ? extensionMatcher.group() : null;
+    }
+
+    private static Properties fileTypeProps;
+
+    public static String getFileTypeExtension(String fileType) {
+        if (fileTypeProps == null) {
+            fileTypeProps = new Properties();
+            InputStream stream = Util.class.getResourceAsStream("filetype.properties");
+            if (stream != null) {
+                try {
+                    String value;
+                    try {
+                        fileTypeProps.load(stream);
+                    } catch (IOException e) {}
+                } finally {
+                    try {
+                        stream.close();
+                    } catch (IOException e) {}
+                }
+            }
+        }
+        return fileTypeProps.getProperty(fileType);
     }
 }

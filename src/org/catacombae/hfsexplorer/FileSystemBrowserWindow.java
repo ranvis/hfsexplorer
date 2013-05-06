@@ -27,6 +27,7 @@ import org.catacombae.hfsexplorer.partitioning.Partition;
 import org.catacombae.hfsexplorer.partitioning.PartitionSystem;
 import org.catacombae.hfsexplorer.types.hfs.ExtDescriptor;
 import org.catacombae.hfsexplorer.types.hfs.HFSPlusWrapperMDB;
+import org.catacombae.hfsexplorer.types.hfscommon.CommonHFSCatalogFile;
 import org.catacombae.hfsexplorer.types.hfscommon.CommonHFSVolumeHeader;
 import org.catacombae.hfsexplorer.types.hfsplus.HFSPlusVolumeHeader;
 import org.catacombae.hfsexplorer.win32.WindowsLowLevelIO;
@@ -123,6 +124,7 @@ public class FileSystemBrowserWindow extends JFrame {
     // Fast accessors for the corresponding variables in org.catacombae.hfsexplorer.gui.FilesystemBrowserPanel
     private JCheckBoxMenuItem toggleCachingItem;
     private JCheckBoxMenuItem replaceReservedCharsItem;
+    private JCheckBoxMenuItem appendExtensionItem;
     // For managing all files opened with the "open file" command
     private final LinkedList<File> tempFiles = new LinkedList<File>();
     private final JFileChooser fileChooser = new JFileChooser();
@@ -437,6 +439,9 @@ public class FileSystemBrowserWindow extends JFrame {
         replaceReservedCharsItem = new JCheckBoxMenuItem("Replace reserved chars");
         boolean replaceItemDefaultValue = System.getProperty("os.name").startsWith("Windows") && Locale.getDefault().getLanguage().matches("ja|kr|zh");
         replaceReservedCharsItem.setState(replaceItemDefaultValue);
+
+        appendExtensionItem = new JCheckBoxMenuItem("Append extension");
+        appendExtensionItem.setState(true);
         
         /*
         JMenuItem setFileReadOffsetItem = new JMenuItem("Set file read offset...");
@@ -592,6 +597,7 @@ public class FileSystemBrowserWindow extends JFrame {
         infoMenu.addSeparator();
         infoMenu.add(toggleCachingItem);
         infoMenu.add(replaceReservedCharsItem);
+        infoMenu.add(appendExtensionItem);
         infoMenu.addSeparator();
         infoMenu.add(createDiskImageItem);
         //infoMenu.add(setFileReadOffsetItem);
@@ -1840,6 +1846,13 @@ public class FileSystemBrowserWindow extends JFrame {
         String fileName = originalFileName;
         if (replaceReservedCharsItem.getState()) {
             fileName = Util.replaceNtfsReservedChars(fileName);
+        }
+        if (appendExtensionItem.getState() && Util.getFileNameExtension(rec.getName()) == null && rec instanceof HFSCommonFSFile) {
+            CommonHFSCatalogFile hfsCat = ((HFSCommonFSFile) rec).getInternalCatalogFile();
+            String extension = Util.getFileTypeExtension(hfsCat.getFileType().toString());
+            if (extension != null) {
+                fileName += extension;
+            }
         }
         
         while(fileName != null) {

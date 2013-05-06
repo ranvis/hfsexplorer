@@ -10,6 +10,10 @@
   <property name="manifest.source.dir" value="src.META-INF"/>
   <!--<property name="builddir" value=".build~"/>-->
   <property name="builddir" value=".build.java~"/>
+  <property name="java.test.dir" value="test"/>
+  <property name="java.test.builddir" value=".build.java.test~"/>
+  <property name="java.test.reporttofile" value="false"/>
+  <property name="java.test.reportdir" value=".report.java.test~"/>
   <property name="java.build.library.dir" value="lib"/>
   <property name="java.runtime.library.dir" value="dist/lib"/>
   <!--<property name="manifest.filename" value="${manifest.source.dir}/MANIFEST.MF"/>-->
@@ -33,6 +37,15 @@
       <include name="**/*.jar"/>
     </fileset>
   </path>
+
+  <path id="java.test.classpath">
+    <pathelement location="${builddir}"/>
+    <pathelement location="${java.test.builddir}"/>
+    <path refid="java.build.classpath"/>
+    <fileset dir="${java.runtime.library.dir}">
+      <include name="**/*.jar"/>
+    </fileset>
+  </path>
   
   <path id="javadoc.classpath">
     <path refid="java.build.classpath"/>
@@ -53,10 +66,17 @@
   <target name="init">
     <mkdir dir="${builddir}"/>
   </target>
+
+  <target name="init-test">
+    <mkdir dir="${java.test.builddir}"/>
+  </target>
   
-  <target name="clean">
-    <mkdir dir="${builddir}"/>
-    <delete dir="${builddir}"/>
+  <target name="clean" depends="clean-test">
+    <delete dir="${builddir}" quiet="true"/>
+  </target>
+
+  <target name="clean-test">
+    <delete dir="${java.test.builddir}" quiet="true"/>
   </target>
   
   <target name="build-all" depends="clean,jar-all"/>
@@ -80,6 +100,24 @@
       <compilerarg value="-Xlint:unchecked"/>
       <classpath refid="java.build.classpath"/>
     </javac>
+  </target>
+
+  <target name="compile-all-test" depends="init-test,compile-all">
+    <javac srcdir="${java.test.dir}" destdir="${java.test.builddir}" includes="**" encoding="UTF-8" debug="true">
+      <classpath refid="java.test.classpath"/>
+    </javac>
+  </target>
+
+  <target name="test-all" depends="compile-all-test">
+    <junit fork="yes" haltonfailure="yes">
+      <batchtest todir="${java.test.reportdir}">
+        <fileset dir="${java.test.dir}">
+          <include name="**/*Test.java"/>
+        </fileset>
+      </batchtest>
+      <formatter type="plain" usefile="${java.test.reporttofile}"/>
+      <classpath refid="java.test.classpath"/>
+    </junit>
   </target>
 
   <target name="copyproperties-all" depends="init">

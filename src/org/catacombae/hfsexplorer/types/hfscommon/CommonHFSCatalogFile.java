@@ -22,6 +22,7 @@ import java.util.Date;
 import org.catacombae.csjc.StaticStruct;
 import org.catacombae.csjc.StructElements;
 import org.catacombae.csjc.structelements.Dictionary;
+import org.catacombae.hfsexplorer.types.carbon.OSType;
 import org.catacombae.hfsexplorer.types.hfsplus.HFSPlusCatalogFile;
 import org.catacombae.hfsexplorer.types.hfsplus.HFSPlusDate;
 import org.catacombae.hfsexplorer.types.hfs.CdrFilRec;
@@ -38,6 +39,7 @@ public abstract class CommonHFSCatalogFile implements StaticStruct, CommonHFSCat
     public abstract CommonHFSForkData getResourceFork();
     public abstract byte[] getBytes();
 
+    public abstract OSType getFileType();
     public abstract boolean isHardFileLink();
     public abstract boolean isHardDirectoryLink();
     public abstract boolean isSymbolicLink();
@@ -182,6 +184,10 @@ public abstract class CommonHFSCatalogFile implements StaticStruct, CommonHFSCat
 
         public HFSPlusBSDInfo getPermissions() {
             return data.getPermissions();
+        }
+
+        public OSType getFileType() {
+            return data.getUserInfo().getFileType();
         }
 
         @Override
@@ -344,6 +350,10 @@ public abstract class CommonHFSCatalogFile implements StaticStruct, CommonHFSCat
 
         public HFSPlusBSDInfo getPermissions() {
             throw new UnsupportedOperationException("Not supported.");
+        }
+
+        public OSType getFileType() {
+            return data.getFilUsrWds().getFdType();
         }
 
         @Override
