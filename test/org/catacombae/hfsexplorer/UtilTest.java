@@ -33,6 +33,14 @@ public class UtilTest {
     }
 
     @Test
+    public void escapeControlChars() {
+        assertThat(Util.escapeControlChars("a/b"), equalTo("a/b"));
+        assertThat(Util.escapeControlChars("Icon\r"), equalTo("Icon%0D"));
+        assertThat(Util.escapeControlChars("\r\n"), equalTo("%0D%0A"));
+        assertThat(Util.escapeControlChars("\0"), equalTo("%00"));
+    }
+
+    @Test
     public void getFileNameExtension() {
         assertThat(Util.getFileNameExtension("text.txt"), equalTo(".txt"));
         assertThat(Util.getFileNameExtension("text.Txt"), equalTo(null));

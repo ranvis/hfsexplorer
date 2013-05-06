@@ -38,6 +38,24 @@ public class Util extends org.catacombae.util.Util {
         return StringUtils.replaceChars(fileName, "*?\"<>:/\\|", "＊？”＜＞：／￥｜");
     }
 
+    private static Matcher escapeMatcher;
+
+    public static String escapeControlChars(String fileName) {
+        if (escapeMatcher == null) {
+            escapeMatcher = Pattern.compile("[\\x00-\\x1f\\x7f]").matcher("");
+        }
+        if (!escapeMatcher.reset(fileName).find()) {
+            return fileName;
+        }
+        StringBuffer result = new StringBuffer();
+        do {
+            String esc = String.format("%%%02X", (int)escapeMatcher.group().charAt(0));
+            escapeMatcher.appendReplacement(result, esc);
+        } while (escapeMatcher.find());
+        escapeMatcher.appendTail(result);
+        return result.toString();
+    }
+
     private static Matcher extensionMatcher;
 
     public static String getFileNameExtension(String fileName) {

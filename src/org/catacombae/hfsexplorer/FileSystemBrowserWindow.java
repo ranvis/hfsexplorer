@@ -124,7 +124,9 @@ public class FileSystemBrowserWindow extends JFrame {
     // Fast accessors for the corresponding variables in org.catacombae.hfsexplorer.gui.FilesystemBrowserPanel
     private JCheckBoxMenuItem toggleCachingItem;
     private JCheckBoxMenuItem replaceReservedCharsItem;
+    private JCheckBoxMenuItem escapeControlChars;
     private JCheckBoxMenuItem appendExtensionItem;
+    private JCheckBoxMenuItem reportRenameItem;
     // For managing all files opened with the "open file" command
     private final LinkedList<File> tempFiles = new LinkedList<File>();
     private final JFileChooser fileChooser = new JFileChooser();
@@ -440,8 +442,13 @@ public class FileSystemBrowserWindow extends JFrame {
         boolean replaceItemDefaultValue = System.getProperty("os.name").startsWith("Windows") && Locale.getDefault().getLanguage().matches("ja|kr|zh");
         replaceReservedCharsItem.setState(replaceItemDefaultValue);
 
+        escapeControlChars = new JCheckBoxMenuItem("Escape control chars");
+        escapeControlChars.setState(true);
+
         appendExtensionItem = new JCheckBoxMenuItem("Append extension");
         appendExtensionItem.setState(true);
+
+        reportRenameItem = new JCheckBoxMenuItem("Report rename log");
         
         /*
         JMenuItem setFileReadOffsetItem = new JMenuItem("Set file read offset...");
@@ -597,7 +604,9 @@ public class FileSystemBrowserWindow extends JFrame {
         infoMenu.addSeparator();
         infoMenu.add(toggleCachingItem);
         infoMenu.add(replaceReservedCharsItem);
+        infoMenu.add(escapeControlChars);
         infoMenu.add(appendExtensionItem);
+        infoMenu.add(reportRenameItem);
         infoMenu.addSeparator();
         infoMenu.add(createDiskImageItem);
         //infoMenu.add(setFileReadOffsetItem);
@@ -1825,6 +1834,16 @@ public class FileSystemBrowserWindow extends JFrame {
     }
     */
 
+    private String fixFileName(String fileName) {
+        if (replaceReservedCharsItem.getState()) {
+            fileName = Util.replaceNtfsReservedChars(fileName);
+        }
+        if (escapeControlChars.getState()) {
+            fileName = Util.escapeControlChars(fileName);
+        }
+        return fileName;
+    }
+
     private void extractFile(final FSFile rec, final File outDir, final ExtractProgressMonitor progressDialog,
             final LinkedList<String> errorMessages, final ExtractProperties extractProperties,
             final ObjectContainer<Boolean> skipDirectory, final FSForkType forkType) {
@@ -1844,9 +1863,7 @@ public class FileSystemBrowserWindow extends JFrame {
                 extractProperties.getFileExistsAction();
         
         String fileName = originalFileName;
-        if (replaceReservedCharsItem.getState()) {
-            fileName = Util.replaceNtfsReservedChars(fileName);
-        }
+        fileName = fixFileName(fileName);
         if (appendExtensionItem.getState() && Util.getFileNameExtension(rec.getName()) == null && rec instanceof HFSCommonFSFile) {
             CommonHFSCatalogFile hfsCat = ((HFSCommonFSFile) rec).getInternalCatalogFile();
             String extension = Util.getFileTypeExtension(hfsCat.getFileType().toString());
@@ -1955,7 +1972,7 @@ public class FileSystemBrowserWindow extends JFrame {
                     outFile.setLastModified(attrs.getModifyDate().getTime());
                 }
                 
-                if(curFileName != (Object) originalFileName && !curFileName.equals(originalFileName))
+                if(curFileName != (Object) originalFileName && !curFileName.equals(originalFileName) && reportRenameItem.getState())
                     errorMessages.addLast("File \"" + originalFileName +
                             "\" was renamed to \"" + curFileName + "\" in parent folder \"" +
                             outDir.getAbsolutePath() + "\".");
@@ -2213,9 +2230,7 @@ public class FileSystemBrowserWindow extends JFrame {
 
             final String originalDirName = folder.getName();
             String dirName = originalDirName;
-            if (replaceReservedCharsItem.getState()) {
-                dirName = Util.replaceNtfsReservedChars(dirName);
-            }
+            dirName = fixFileName(dirName);
             while(dirName != null) {
                 String curDirName = dirName;
                 dirName = null;
@@ -2261,7 +2276,7 @@ public class FileSystemBrowserWindow extends JFrame {
                 }
 
                 if(thisDir.mkdir() || thisDir.exists()) {
-                    if(curDirName != (Object)originalDirName && !curDirName.equals(originalDirName))
+                    if(curDirName != (Object)originalDirName && !curDirName.equals(originalDirName) && reportRenameItem.getState())
                         errorMessages.addLast("Directory \"" + originalDirName +
                                 "\" was renamed to \"" + curDirName + "\" in parent folder \"" +
                                 outDir.getAbsolutePath() + "\".");
