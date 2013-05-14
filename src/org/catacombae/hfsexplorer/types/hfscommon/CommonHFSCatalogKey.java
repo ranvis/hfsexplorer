@@ -21,7 +21,6 @@ import java.io.PrintStream;
 import org.catacombae.csjc.StructElements;
 import org.catacombae.csjc.structelements.Dictionary;
 import org.catacombae.hfsexplorer.FastUnicodeCompare;
-import org.catacombae.hfsexplorer.Util;
 import org.catacombae.hfsexplorer.types.hfsplus.HFSPlusCatalogKey;
 import org.catacombae.hfsexplorer.types.hfsx.HFSXKeyCompareType;
 import org.catacombae.hfsexplorer.types.hfs.CatKeyRec;
@@ -183,21 +182,7 @@ public abstract class CommonHFSCatalogKey extends CommonBTKey<CommonHFSCatalogKe
         @Override
         public int compareTo(CommonHFSCatalogKey o) {
             if(o instanceof HFSImplementation) {
-                HFSImplementation k = (HFSImplementation) o;
-                long res = getParentID().toLong() - k.getParentID().toLong();
-                if(res == 0) {
-                    int res2 = Util.unsignedArrayCompareLex(key.getCkrCName(), k.key.getCkrCName());
-                    if(res2 == 0)
-                        return 0;
-                    else if(res2 > 0)
-                        return 1;
-                    else
-                        return -1;
-                }
-                else if(res > 0)
-                    return 1;
-                else
-                    return -1;
+                return key.compareTo(((HFSImplementation) o).key);
             }
             else {
                 throw new RuntimeException("Can't compare a " + o.getClass() +
