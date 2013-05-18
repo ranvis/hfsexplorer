@@ -47,6 +47,7 @@ import org.catacombae.jparted.lib.fs.hfscommon.HFSCommonFileSystemHandler;
 import org.catacombae.jparted.lib.fs.hfscommon.HFSCommonFSFile;
 import org.catacombae.jparted.lib.ReadableStreamDataLocator;
 import java.awt.BorderLayout;
+import java.awt.Desktop;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -62,6 +63,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.*;
@@ -504,7 +506,6 @@ public class FileSystemBrowserWindow extends JFrame {
 
         JMenuItem checkUpdatesItem = new JMenuItem("Check for updates...");
         checkUpdatesItem.setMnemonic(KeyEvent.VK_U);
-        checkUpdatesItem.setEnabled(false);
         checkUpdatesItem.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent ae) {
@@ -519,37 +520,28 @@ public class FileSystemBrowserWindow extends JFrame {
                         System.out.println("  Version: " + dictVersion);
                         System.out.println("  Build number: " + dictBuildNumber);
                         boolean dictVersionIsHigher = false;
-                        if(true) {
-                            dictVersionIsHigher = dictBuildNumber > BuildNumber.BUILD_NUMBER;
-                        }
-                        else { // Old disabled code
-                            char[] dictVersionArray = dictVersion.toCharArray();
-                            char[] myVersionArray = HFSExplorer.VERSION.toCharArray();
-                            int minArrayLength = Math.min(dictVersionArray.length, myVersionArray.length);
-                            boolean foundDifference = false;
-                            for(int i = 0; i < minArrayLength; ++i) {
-                                if(dictVersionArray[i] > myVersionArray[i]) {
-                                    dictVersionIsHigher = true;
-                                    foundDifference = true;
-                                    break;
-                                }
-                                else if(dictVersionArray[i] < myVersionArray[i]) {
-                                    dictVersionIsHigher = false;
-                                    foundDifference = true;
-                                    break;
-                                }
-                            }
-                            if(!foundDifference) {
-                                dictVersionIsHigher = dictVersionArray.length > myVersionArray.length;
-                            }
-                        }
+                        dictVersionIsHigher = dictBuildNumber > BuildNumber.BUILD_NUMBER;
 
                         if(dictVersionIsHigher) {
-                            JOptionPane.showMessageDialog(FileSystemBrowserWindow.this,
-                                    "There are updates available!\n" +
+                            String message = "There are updates available!\n" +
                                     "Latest version is: " + dictVersion +
-                                    " (build number #" + dictBuildNumber + ")",
-                                    "Information", JOptionPane.INFORMATION_MESSAGE);
+                                    " (build number #" + dictBuildNumber + ")";
+                            String page = sdp.getValue("Page");
+                            Desktop desktop = Desktop.isDesktopSupported() ? Desktop.getDesktop() : null;
+                            if(page == null || (desktop != null && !desktop.isSupported(java.awt.Desktop.Action.BROWSE))) {
+                                desktop = null;
+                            }
+                            if(desktop == null) {
+                                JOptionPane.showMessageDialog(FileSystemBrowserWindow.this, message,
+                                        "Information", JOptionPane.INFORMATION_MESSAGE);
+                            } else {
+                                message += "\nVisit the download page now.";
+                                int result = JOptionPane.showConfirmDialog(FileSystemBrowserWindow.this, message,
+                                        "Information", JOptionPane.YES_NO_OPTION);
+                                if(result == JOptionPane.YES_OPTION) {
+                                    desktop.browse(new URI(page));
+                                }
+                            }
                         }
                         else {
                             JOptionPane.showMessageDialog(FileSystemBrowserWindow.this,
